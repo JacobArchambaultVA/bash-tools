@@ -76,9 +76,9 @@ cd /path/to/repo-or-parent-folder
 bash /path/to/bash-tools/UnitTests/SpecFlow/count-specflow-tests-per-file.sh
 ```
 
-### `UnitTests/SpecFlow/remove-attributes.txt`
+### `UnitTests/SpecFlow/remove-attributes.sh`
 
-Contains a one-liner command (not a standalone executable script) to remove SpecFlow attributes from source files recursively.
+Removes SpecFlow attributes from source files recursively.
 
 It removes lines containing these attributes:
 
@@ -94,11 +94,8 @@ Usage:
 
 ```bash
 cd /path/to/target/repo
-# Review first (recommended)
-grep -RIn --exclude-dir=.git --exclude-dir=bin --exclude-dir=obj --exclude-dir=.vs --exclude-dir=TestResults -e '\[Scope' -e '\[Binding' -e '\[Given' -e '\[When' -e '\[Then' .
-
-# Apply removal command from remove-attributes.txt
-grep -RIlZ --exclude-dir=.git --exclude-dir=bin --exclude-dir=obj --exclude-dir=.vs --exclude-dir=TestResults -e '\[Scope' -e '\[Binding' -e '\[Given' -e '\[When' -e '\[Then' . | xargs -0 sed -i '/\[Scope\|\[Binding\|\[Given\|\[When\|\[Then/d'
+chmod +x /path/to/bash-tools/UnitTests/SpecFlow/remove-attributes.sh
+/path/to/bash-tools/UnitTests/SpecFlow/remove-attributes.sh
 ```
 
 ## Add `supergit` to your shell startup (`~/.bashrc`)
