@@ -90,12 +90,17 @@ It removes lines containing these attributes:
 
 It excludes common build/tool directories (`.git`, `bin`, `obj`, `.vs`, `TestResults`).
 
+It accepts an optional directory argument (defaults to current directory).
+
 Usage:
 
 ```bash
 cd /path/to/target/repo
 chmod +x /path/to/bash-tools/UnitTests/SpecFlow/remove-attributes.sh
 /path/to/bash-tools/UnitTests/SpecFlow/remove-attributes.sh
+
+# Or pass a specific directory to process
+/path/to/bash-tools/UnitTests/SpecFlow/remove-attributes.sh /path/to/target/repo
 ```
 
 ## Add `supergit` to your shell startup (`~/.bashrc`)
