@@ -31,6 +31,19 @@ Optional parallelism limit:
 JOBS=4 supergit git fetch --all --prune
 ```
 
+### `dotnet-tools/build-ped-services.sh`
+
+Cleans and builds all PED Services projects using MSBuild. It finds all `*-Combined*.sln` solution files under `ped-services-*` directories and runs `dotnet clean` and `dotnet build` with the `debug-combined` configuration for each.
+
+Tracks successes and failures, reporting a summary at the end.
+
+Usage (run from parent repos folder):
+
+```bash
+cd ~/source/repos
+bash dotnet-tools/build-ped-services.sh
+```
+
 ### `UnitTests/add-test-category.sh`
 
 Adds `TestCategory("UnitTest")` to MSTest methods in `.cs` files under:
@@ -74,6 +87,19 @@ Usage:
 ```bash
 cd /path/to/repo-or-parent-folder
 bash /path/to/bash-tools/UnitTests/SpecFlow/count-specflow-tests-per-file.sh
+```
+
+### `UnitTests/SpecFlow/delete-dangling-specflow-files.sh`
+
+Recursively deletes all `*.feature.cs` generated code files from the current directory and subdirectories.
+
+Useful for cleaning up auto-generated SpecFlow code files that are no longer needed or to reset code generation state.
+
+Usage:
+
+```bash
+cd /path/to/repo
+bash /path/to/bash-tools/UnitTests/SpecFlow/delete-dangling-specflow-files.sh
 ```
 
 ### `UnitTests/SpecFlow/remove-attributes.sh`
