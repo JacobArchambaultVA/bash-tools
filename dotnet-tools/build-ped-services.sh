@@ -1,10 +1,17 @@
 #!/bin/bash
 
 # Script to clean and build all ped-services projects
-# Usage: ./build-ped-services.sh
+# Usage: ./build-ped-services.sh [test]
+#   test: Optional parameter to run dotnet test instead of dotnet build
 
 # Directory where the script is run from (should be the repos folder)
 REPO_DIR="$(pwd)"
+
+# Check if test parameter was passed
+RUN_TESTS=false
+if [ "$1" == "test" ]; then
+    RUN_TESTS=true
+fi
 
 # Arrays to track results
 declare -a PASSED_BUILDS
@@ -43,13 +50,23 @@ for solution_file in "${SOLUTION_FILES[@]}"; do
         continue
     fi
     
-    # Build
-    echo "Building with debug-combined configuration..."
-    if ! dotnet build -c debug-combined "$solution_file"; then
-        echo "✗ ERROR: Build failed for $dir_name"
-        FAILED_BUILDS+=("$dir_name")
-        echo ""
-        continue
+    # Build or Test
+    if [ "$RUN_TESTS" = true ]; then
+        echo "Running tests with debug-combined configuration..."
+        if ! dotnet test -c debug-combined "$solution_file"; then
+            echo "✗ ERROR: Tests failed for $dir_name"
+            FAILED_BUILDS+=("$dir_name")
+            echo ""
+            continue
+        fi
+    else
+        echo "Building with debug-combined configuration..."
+        if ! dotnet build -c debug-combined "$solution_file"; then
+            echo "✗ ERROR: Build failed for $dir_name"
+            FAILED_BUILDS+=("$dir_name")
+            echo ""
+            continue
+        fi
     fi
     
     echo "✓ $dir_name completed successfully"
