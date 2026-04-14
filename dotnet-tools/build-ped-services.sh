@@ -7,10 +7,13 @@
 # Directory where the script is run from (should be the repos folder)
 REPO_DIR="$(pwd)"
 
-# Check if test parameter was passed
-RUN_TESTS=false
+# Check if test parameter was passed and set command
 if [ "$1" == "test" ]; then
-    RUN_TESTS=true
+    BUILD_CMD="test"
+    BUILD_MSG="tests"
+else
+    BUILD_CMD="build"
+    BUILD_MSG="build"
 fi
 
 # Arrays to track results
@@ -51,22 +54,12 @@ for solution_file in "${SOLUTION_FILES[@]}"; do
     fi
     
     # Build or Test
-    if [ "$RUN_TESTS" = true ]; then
-        echo "Running tests with debug-combined configuration..."
-        if ! dotnet test -c debug-combined "$solution_file"; then
-            echo "✗ ERROR: Tests failed for $dir_name"
-            FAILED_BUILDS+=("$dir_name")
-            echo ""
-            continue
-        fi
-    else
-        echo "Building with debug-combined configuration..."
-        if ! dotnet build -c debug-combined "$solution_file"; then
-            echo "✗ ERROR: Build failed for $dir_name"
-            FAILED_BUILDS+=("$dir_name")
-            echo ""
-            continue
-        fi
+    echo "Running $BUILD_MSG with debug-combined configuration..."
+    if ! dotnet $BUILD_CMD -c debug-combined "$solution_file"; then
+        echo "✗ ERROR: $BUILD_MSG failed for $dir_name"
+        FAILED_BUILDS+=("$dir_name")
+        echo ""
+        continue
     fi
     
     echo "✓ $dir_name completed successfully"
