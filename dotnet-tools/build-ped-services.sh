@@ -48,11 +48,15 @@ for solution_file in "${SOLUTION_FILES[@]}"; do
     echo "Cleaning..."
     if ! dotnet clean -c debug-combined "$solution_file"; then
         echo "✗ ERROR: Clean failed for $dir_name"
-        FAILED_BUILDS+=("$dir_name")
         echo ""
         continue
     fi
-    
+done 
+for solution_file in "${SOLUTION_FILES[@]}"; do
+    # Determine owning repo directory (top-level folder under REPO_DIR)
+    rel_path="${solution_file#$REPO_DIR/}"
+    dir_name="${rel_path%%/*}"
+
     # Build or Test
     echo "Running $BUILD_MSG with debug-combined configuration..."
     if ! dotnet $BUILD_CMD -c debug-combined "$solution_file"; then
