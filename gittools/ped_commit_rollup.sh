@@ -8,13 +8,36 @@ set -euo pipefail
 # - Bot/build users are excluded.
 #
 # Usage:
-#   ped_commit_rollup.sh [base_dir]
+#   ped_commit_rollup.sh [base_dir] [git_log_args...]
 #
 # Examples:
 #   ped_commit_rollup.sh
 #   ped_commit_rollup.sh /c/Users/OITLOUArchaJ/source/repos
+#   ped_commit_rollup.sh --all --no-merges --since=2025-10-10
+#   ped_commit_rollup.sh /c/Users/OITLOUArchaJ/source/repos --all --since=2025-10-10
 
-BASE_DIR="${1:-$PWD}"
+BASE_DIR="$PWD"
+LOG_ARGS=()
+
+if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
+  cat <<'EOF'
+Usage:
+  ped_commit_rollup.sh [base_dir] [git_log_args...]
+
+Notes:
+  - The script always enforces: git --no-pager ... log --format=%aN%x09%aE
+  - Any extra args are forwarded to git log (for example: --all --no-merges --since=2025-10-10)
+EOF
+  exit 0
+fi
+
+# Optional first positional arg can be a base directory.
+if [[ "${1:-}" != "" && "${1:0:1}" != "-" && -d "${1}" ]]; then
+  BASE_DIR="$1"
+  shift
+fi
+
+LOG_ARGS=("$@")
 
 if [[ ! -d "$BASE_DIR" ]]; then
   echo "Error: base directory not found: $BASE_DIR" >&2
@@ -26,7 +49,7 @@ cd "$BASE_DIR"
 for repo in ped*; do
   [[ -d "$repo" ]] || continue
   git -C "$repo" rev-parse --is-inside-work-tree >/dev/null 2>&1 || continue
-  git --no-pager -C "$repo" log --no-merges --format='%aN%x09%aE'
+  git --no-pager -C "$repo" log "${LOG_ARGS[@]}" --format='%aN%x09%aE'
 done | awk -F '\t' '
 function trim(s){ sub(/^[[:space:]]+/,"",s); sub(/[[:space:]]+$/,"",s); return s }
 function lc(s){ return tolower(s) }
