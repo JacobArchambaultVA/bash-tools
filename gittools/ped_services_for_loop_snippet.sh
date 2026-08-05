@@ -1,0 +1,1 @@
+for dir in ped-services*/; do git -C "$dir" checkout -b <branch-name>; done
