@@ -171,3 +171,11 @@ Counts merged PRs per GitHub team member since a date, sorted descending. Requir
 ```bash
 bash ghclitools/team_merged_pr_counts.sh 2025-11-01 [org] [team]
 ```
+
+### `ghclitools/team_pr_comment_counts.sh`
+
+Counts PRs commented on per GitHub team member since a date, sorted descending. Requires `gh`.
+
+```bash
+bash ghclitools/team_pr_comment_counts.sh 2025-11-01 [org] [team]
+```
