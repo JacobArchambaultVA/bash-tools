@@ -163,3 +163,11 @@ For Git Bash on Windows, `~` usually maps to your user profile home in Git Bash,
 
 - Several scripts perform in-place edits (`perl -i`, `sed -i`). Commit or stash changes first.
 - Run from the expected working directory noted above to avoid editing/counting unintended files.
+
+### `ghclitools/team_merged_pr_counts.sh`
+
+Counts merged PRs per GitHub team member since a date, sorted descending. Requires `gh`.
+
+```bash
+bash ghclitools/team_merged_pr_counts.sh 2025-11-01 [org] [team]
+```
