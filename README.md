@@ -181,6 +181,15 @@ bash gittools/inspector_ignore_cost_calculator.sh [minutes_per_change] [annual_s
 bash gittools/inspector_ignore_cost_calculator.sh 30 120000
 ```
 
+### `revops/pipeline_cancellation_cost_calculator.sh`
+
+Counts PRs created since a date in each `ped-services*` repo cloned under `~/source/repos`. The GitHub repo comes from each clone's `origin`, and the count is queried with `gh`. The cost estimate is the time spent manually re-running required checks that were cancelled by duplicate pipeline triggers. Defaults: 15 minutes per PR, $100k per year (2080 work hours/year), and PRs since `2026-06-11`, when `cancel-in-progress` was added to required checks. Prints a per-repo table with a total row.
+
+```bash
+bash revops/pipeline_cancellation_cost_calculator.sh [minutes_per_pr] [annual_salary] [since_date YYYY-MM-DD]
+bash revops/pipeline_cancellation_cost_calculator.sh 30 120000 2026-07-29
+```
+
 ### `ghclitools/team_pr_comment_counts.sh`
 
 Counts PRs commented on per GitHub team member since a date, sorted descending. Requires `gh`.
