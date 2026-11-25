@@ -172,6 +172,15 @@ Counts merged PRs per GitHub team member since a date, sorted descending. Requir
 bash ghclitools/team_merged_pr_counts.sh 2025-11-01 [org] [team]
 ```
 
+### `gittools/inspector_ignore_cost_calculator.sh`
+
+Counts commits (all branches, merges included) that modified `.inspector-ignore` in each `ped-services*` repo under `~/source/repos`, with a cost floor based on minutes per change and annual salary (defaults: 15 minutes, $100k; 2080 work hours/year). Prints a per-repo table with a total row. Run `git fetch --all` in each repo first so remote branches are included.
+
+```bash
+bash gittools/inspector_ignore_cost_calculator.sh [minutes_per_change] [annual_salary]
+bash gittools/inspector_ignore_cost_calculator.sh 30 120000
+```
+
 ### `ghclitools/team_pr_comment_counts.sh`
 
 Counts PRs commented on per GitHub team member since a date, sorted descending. Requires `gh`.
