@@ -183,11 +183,14 @@ bash gittools/inspector_ignore_cost_calculator.sh 30 120000
 
 ### `revops/pipeline_cancellation_cost_calculator.sh`
 
-Counts PRs created since a date in each `ped-services*` repo cloned under `~/source/repos`. The GitHub repo comes from each clone's `origin`, and the count is queried with `gh`. The cost estimate is the time spent manually re-running required checks that were cancelled by duplicate pipeline triggers. Defaults: 15 minutes per PR, $100k per year (2080 work hours/year), and PRs since `2026-06-11`, when `cancel-in-progress` was added to required checks. Prints a per-repo table with a total row.
+Counts PRs created in each `ped-services*` repo cloned under `~/source/repos` since `cancel-in-progress` reached that repo's required checks. The PR count is queried with `gh` (repo from each clone's `origin`). The cost estimate is the time spent manually re-running required checks that were cancelled by duplicate pipeline triggers. Defaults: 15 minutes per PR and $100k per year (2080 work hours/year).
+
+Each repo's start date is detected from git history as the earliest of: the first commit merged to the default branch that added `cancel-in-progress` to any workflow except the non-required ones (`delete_failed_workflow_runs.yml`, `markdown-linter.yml`, `python-lint.yml`), and the merge date of a common template whose own `concurrency` block cancels runs, for any repo that calls it (currently `codeql-template.yml` and `deploy-dev-template.yml`; the repo's own adoption date is ignored because open PRs inherit the template by syncing the default branch). Repos with neither show `-` and 0 PRs. Pass `since_date` to use one fixed date for every repo instead. Run `git fetch` in each repo first. Prints a per-repo table (repo, since, pr count, cost) with a total row.
 
 ```bash
 bash revops/pipeline_cancellation_cost_calculator.sh [minutes_per_pr] [annual_salary] [since_date YYYY-MM-DD]
-bash revops/pipeline_cancellation_cost_calculator.sh 30 120000 2026-07-29
+bash revops/pipeline_cancellation_cost_calculator.sh 30 120000
+bash revops/pipeline_cancellation_cost_calculator.sh 15 100000 2026-06-11
 ```
 
 ### `ghclitools/team_pr_comment_counts.sh`
